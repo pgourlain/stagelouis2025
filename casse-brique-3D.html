@@ -64,10 +64,10 @@
             0% { box-shadow: 0 0 60px #000a, 0 0 100px #FFD70022, 0 0 0 8px #FFD70044, inset 0 0 80px #0004; }
             100% { box-shadow: 0 0 80px #000c, 0 0 120px #FFD70033, 0 0 0 10px #FFD70066, inset 0 0 100px #0006; }
         }
-        #mainMenu, #shopScreen, #progressionScreen, #creditsScreen {
+        #mainMenu, #shopScreen, #progressionScreen, #creditsScreen, #scoreScreen {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            display: flex;
+                display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -370,20 +370,70 @@
         <div id="score">Score: 0</div>
         <div id="lives">Vies: ❤️❤️❤️</div>
         <div id="level">Niveau: 1</div>
+        <div id="accountName" style="font-size:20px;color:#fff;">Joueur: -</div>
     </div>
     <div id="mainMenu">
         <div class="menu-title">CASSE-BRIQUE 2D</div>
+        <div id="menuAccountDisplay" style="position:absolute;top:20px;right:20px;font-size:18px;color:#ffd700;text-align:right;">Compte: - | Score: 0</div>
         <button class="menu-btn" id="playBtn">🎮 Jouer</button>
         <button class="menu-btn" id="shopBtn">🛒 Boutique</button>
         <button class="menu-btn" id="progressionBtn">📈 Progression</button>
         <button class="menu-btn" id="creditsBtn">⭐ Crédits</button>
+        <button class="menu-btn" id="scoreBtn">🏆 Scores</button>
+    <button id="fullscreenBtn" style="position:fixed;bottom:24px;left:24px;z-index:20;display:block;pointer-events:auto;background:linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,165,0,0.25));backdrop-filter:blur(12px);color:#FFD700;font-size:28px;border:2px solid #FFD70066;border-radius:50px;padding:16px 24px;box-shadow:0 4px 20px #0008, 0 0 40px #FFD70033;cursor:pointer;transition:all 0.3s;">
+        🔳 Plein écran
+    </button>
+        <button class="menu-btn" id="accountBtn">👤 Compte</button>
     </div>
     <div id="shopScreen" style="display:none;">
         <div class="menu-title">Boutique</div>
         <div class="back-arrow" id="backShopBtn" title="Retour au menu">
             <svg viewBox="0 0 32 32"><path d="M20 28l-10-12 10-12v24z"/></svg>
         </div>
+        <div id="shopCoinDisplay" style="font-size:24px;color:#FFD700;text-align:center;margin-bottom:20px;">🪙 0</div>
         <div id="shopItems"></div>
+    </div>
+    <div id="scoreScreen" style="display:none;">
+        <div class="menu-title">Scores</div>
+        <div class="back-arrow" id="backScoreBtn" title="Retour au menu">
+            <svg viewBox="0 0 32 32"><path d="M20 28l-10-12 10-12v24z"/></svg>
+        </div>
+        <div style="width:90%;max-width:720px;margin-top:24px;color:#fff;">
+            <div style="font-size:22px;color:#FFD700;margin-bottom:12px;">Meilleur score : <span id="bestScore">0</span></div>
+            <div style="font-size:18px;color:#fff;margin-bottom:18px;">Top 10 :</div>
+            <ol id="topScores" style="color:#fff;font-size:18px;max-height:340px;overflow:auto;padding-left:22px;"></ol>
+        </div>
+    </div>
+    <div id="accountScreen" style="display:none;">
+        <div class="menu-title" style="margin-bottom:-20px;">Comptes</div>
+        <div class="back-arrow" id="backAccountBtn" title="Retour au menu" style="top:-30px;">
+            <svg viewBox="0 0 32 32"><path d="M20 28l-10-12 10-12v24z"/></svg>
+        </div>
+        <div style="width:90%;max-width:720px;margin-top:-350px;color:#fff;margin-left:auto;margin-right:auto;text-align:center;">
+            <div id="currentAccountDisplay" style="font-size:20px;color:#FFD700;margin-bottom:18px;display:none;text-align:center;">Connecté en tant que: <span id="currentAccountName">-</span></div>
+            <div id="logoutSection" style="display:none;margin-bottom:12px;">
+                <button id="logoutBtn" class="shop-btn" style="background:linear-gradient(135deg,#ff6b6b,#ff8787);">Se déconnecter</button>
+            </div>
+            <div id="loginSection" style="display:block;">
+                <div style="font-size:18px;color:#fff;margin-bottom:8px;">Connexion</div>
+                <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">
+                    <input id="loginName" placeholder="Pseudo" style="flex:1;padding:10px;border-radius:8px;border:1px solid #444;background:#111;color:#fff;font-size:16px;" />
+                    <input id="loginPass" placeholder="Mot de passe" type="password" style="flex:1;padding:10px;border-radius:8px;border:1px solid #444;background:#111;color:#fff;font-size:16px;" />
+                    <button id="loginBtn" class="shop-btn">Se connecter</button>
+                </div>
+            </div>
+            <div style="font-size:18px;color:#fff;margin-bottom:8px;">Créer un compte</div>
+            <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">
+                <input id="newAccountName" placeholder="Pseudo (max 12 char)" maxlength="12" style="flex:1;padding:10px;border-radius:8px;border:1px solid #444;background:#111;color:#fff;font-size:16px;" />
+                <input id="newAccountPass" placeholder="Mot de passe (obligatoire)" type="password" required style="flex:1;padding:10px;border-radius:8px;border:1px solid #444;background:#111;color:#fff;font-size:16px;" />
+                <button id="createAccountBtn" class="shop-btn">Créer</button>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px;">
+                <button id="resetAccountsBtn" class="shop-btn" style="background:linear-gradient(135deg,#ff6b6b,#ff8787);">Réinitialiser tous les comptes</button>
+            </div>
+            <div style="font-size:18px;color:#fff;margin-bottom:8px;">Changer de compte</div>
+            <div id="accountList" style="max-height:300px;overflow:auto;padding:8px;border-radius:8px;background:linear-gradient(180deg,#111,#0d0d0d);border:1px solid #222;"></div>
+        </div>
     </div>
     <div id="progressionScreen" style="display:none;">
         <div class="menu-title">Progression</div>
@@ -533,10 +583,163 @@
 // --- Paramètres du jeu ---
 const CANVAS = document.getElementById('gameCanvas');
 const CTX = CANVAS.getContext('2d');
-const W = CANVAS.width, H = CANVAS.height;
+let W = CANVAS.width, H = CANVAS.height;
+
+// --- LocalStorage helpers (scores & skins) ---
+function loadOwnedSkins() { try { return JSON.parse(localStorage.getItem('bb_ownedSkins')||'[]'); } catch(e){ return ['classic']; } }
+function saveOwnedSkins() { try { localStorage.setItem('bb_ownedSkins', JSON.stringify(gameState.ownedSkins)); } catch(e){} }
+function loadSelectedSkin() { return localStorage.getItem('bb_selectedSkin') || 'classic'; }
+function saveSelectedSkin() { try { localStorage.setItem('bb_selectedSkin', gameState.selectedSkin); } catch(e){} }
+function loadScores(){
+    try {
+        let s = JSON.parse(localStorage.getItem('bb_scores')||'[]');
+        // normalize old numeric-only entries to objects
+        return s.map(item => {
+            if(typeof item === 'number') return { name: 'Anonyme', score: item, date: Date.now() };
+            if(item && typeof item.score === 'number') return item;
+            return { name: (item && item.name) || 'Anonyme', score: (item && item.score) || 0, date: (item && item.date) || Date.now() };
+        });
+    } catch(e){ return []; }
+}
+function saveScores(arr){ try { localStorage.setItem('bb_scores', JSON.stringify(arr)); } catch(e){} }
+
+// --- Accounts (profiles) ---
+const MAX_NAME_LEN = 12;
+function loadAccounts(){ try { return JSON.parse(localStorage.getItem('bb_accounts')||'[]'); } catch(e){ return []; } }
+function saveAccounts(arr){ try { localStorage.setItem('bb_accounts', JSON.stringify(arr)); } catch(e){} }
+function loadCurrentAccountId(){ return localStorage.getItem('bb_currentAccountId') || null; }
+function saveCurrentAccountId(id){ try { localStorage.setItem('bb_currentAccountId', id); } catch(e){} }
+
+function getAccountById(id){ let accs = loadAccounts(); return accs.find(a=>a.id===id) || null; }
+function saveAccount(account){ let accs = loadAccounts(); let idx = accs.findIndex(a=>a.id===account.id); if(idx>=0) accs[idx]=account; else accs.push(account); saveAccounts(accs); }
+
+// --- crypto helper for password hashing ---
+async function hashString(str){
+    try{
+        const enc = new TextEncoder();
+        const data = enc.encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){ return null; }
+}
+
+async function createAccount(name, password){
+    if(!name||!name.trim()) name='Anonyme';
+    if(!password || password.length === 0){ alert('Mot de passe obligatoire.'); return; }
+    let accs=loadAccounts();
+    let id='id_'+Date.now();
+    let acc={ id:id, name:name.trim(), unlockedLevel:1, coins:0, ownedSkins:['classic'], selectedSkin:'classic', scores:[] };
+    let h = await hashString(password);
+    if(h) acc.passwordHash = h;
+    else { alert('Erreur de chiffrement.'); return; }
+    accs.push(acc); saveAccounts(accs); saveCurrentAccountId(id); applyProfileToGame(acc); renderAccountList(); return acc;
+}
+
+function deleteAccount(id){ let accs=loadAccounts(); accs=accs.filter(a=>a.id!==id); saveAccounts(accs); let current=loadCurrentAccountId(); if(current===id){ if(accs.length) { saveCurrentAccountId(accs[0].id); applyProfileToGame(accs[0]); } else { saveCurrentAccountId(null); initGuestProfile(); } } renderAccountList(); }
+
+async function loginAccount(name, password){
+    if(!name || !password){ alert('Entrez pseudo et mot de passe.'); return; }
+    let accs = loadAccounts();
+    let acc = accs.find(a => a.name && a.name.toLowerCase() === name.toLowerCase());
+    if(!acc){ alert('Compte non trouvé.'); return; }
+    if(!acc.passwordHash){ alert('Ce compte n\'a pas de mot de passe.'); return; }
+    let h = await hashString(password);
+    if(h !== acc.passwordHash){ alert('Mot de passe incorrect.'); return; }
+    saveCurrentAccountId(acc.id);
+    applyProfileToGame(acc);
+    renderAccountList();
+    document.getElementById('accountScreen').style.display='none';
+    document.getElementById('mainMenu').style.display='flex';
+}
+
+function applyProfileToGame(acc){ if(!acc) return; gameState.progression.maxLevel = acc.unlockedLevel || 1; gameState.coins = acc.coins || 0; gameState.ownedSkins = acc.ownedSkins || ['classic']; gameState.selectedSkin = acc.selectedSkin || 'classic'; // ensure HUD updates
+    document.getElementById('accountName').textContent = 'Joueur: '+(acc.name || 'Anonyme'); updateHUD(); }
+
+function persistProfileFromGame(){ let id = loadCurrentAccountId(); if(!id) return; let acc = getAccountById(id); if(!acc) return; acc.unlockedLevel = gameState.progression.maxLevel; acc.coins = gameState.coins; acc.ownedSkins = gameState.ownedSkins || ['classic']; acc.selectedSkin = gameState.selectedSkin || 'classic'; saveAccount(acc); }
+
+function initGuestProfile(){
+    // No guest: if no accounts, force to account screen
+    let accs = loadAccounts();
+    if(accs.length === 0){
+        // No accounts, show account screen
+        document.getElementById('mainMenu').style.display='none';
+        document.getElementById('accountScreen').style.display='flex';
+        renderAccountList();
+        return;
+    }
+    let id = loadCurrentAccountId();
+    if(id){
+        let acc = getAccountById(id);
+        if(acc) applyProfileToGame(acc);
+        else {
+            // invalid id, select first
+            applyProfileToGame(accs[0]);
+            saveCurrentAccountId(accs[0].id);
+        }
+    } else {
+        // no current, select first
+        applyProfileToGame(accs[0]);
+        saveCurrentAccountId(accs[0].id);
+    }
+}
+
+function renderAccountList(){ let list = document.getElementById('accountList'); if(!list) return; list.innerHTML=''; let accs = loadAccounts(); if(accs.length===0){ list.textContent='Aucun compte. Créez-en un.'; return; } let current = loadCurrentAccountId(); accs.forEach(acc=>{ let row=document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.padding='8px'; row.style.borderBottom='1px solid rgba(255,255,255,0.03)'; let left=document.createElement('div'); left.textContent = acc.name + ' (Niv '+(acc.unlockedLevel||1)+', '+(acc.coins||0)+' 🪙)'; left.style.color='#fff'; let right=document.createElement('div'); let sel=document.createElement('button'); sel.className='shop-btn'; sel.textContent = (current===acc.id)?'Sélectionné':'Choisir'; sel.onclick=()=>{ selectAccount(acc.id); }; let del=document.createElement('button'); del.className='shop-btn'; del.style.marginLeft='8px'; del.textContent='Supprimer'; del.onclick=()=>{ if(confirm('Supprimer le compte '+acc.name+' ?')) deleteAccount(acc.id); }; right.appendChild(sel); right.appendChild(del); row.appendChild(left); row.appendChild(right); list.appendChild(row); }); }
+function renderAccountList(){
+    let list = document.getElementById('accountList');
+    if(!list) return;
+    list.innerHTML = '';
+    let accs = loadAccounts();
+    if(accs.length === 0){
+        list.textContent = 'Aucun compte. Créez-en un.';
+        return;
+    }
+    let current = loadCurrentAccountId();
+    let currentAcc = current ? getAccountById(current) : null;
+    let display = document.getElementById('currentAccountDisplay');
+    let nameSpan = document.getElementById('currentAccountName');
+    let loginSec = document.getElementById('loginSection');
+    let logoutSec = document.getElementById('logoutSection');
+    if(currentAcc && display && nameSpan && loginSec && logoutSec){
+        display.style.display = 'block';
+        nameSpan.textContent = currentAcc.name;
+        loginSec.style.display = 'none';
+        logoutSec.style.display = 'block';
+    } else {
+        if(display) display.style.display = 'none';
+        if(loginSec) loginSec.style.display = 'block';
+        if(logoutSec) logoutSec.style.display = 'none';
+    }
+    accs.forEach(acc => {
+        let row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.justifyContent = 'space-between';
+        row.style.alignItems = 'center';
+        row.style.padding = '8px';
+        row.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+        let left = document.createElement('div');
+        left.textContent = acc.name + ' (Niv ' + (acc.unlockedLevel || 1) + ', ' + (acc.coins || 0) + ' 🪙)';
+        left.style.color = '#fff';
+        let right = document.createElement('div');
+        let sel = document.createElement('button');
+        sel.className = 'shop-btn';
+        sel.textContent = (current === acc.id) ? 'Sélectionné' : 'Choisir';
+        sel.onclick = async () => { await selectAccount(acc.id); };
+        let del = document.createElement('button');
+        del.className = 'shop-btn';
+        del.style.marginLeft = '8px';
+        del.textContent = 'Supprimer';
+        del.onclick = () => { if(confirm('Supprimer le compte ' + acc.name + ' ?')) deleteAccount(acc.id); };
+        right.appendChild(sel);
+        right.appendChild(del);
+        row.appendChild(left);
+        row.appendChild(right);
+        list.appendChild(row);
+    });
+}
 
 // --- Variables globales ---
-let gameState = {
+    let gameState = {
     running: false,
     menu: true,
     paused: false,
@@ -545,8 +748,8 @@ let gameState = {
     level: 1,
     coins: 0,
     bricks: [],
-    paddle: { x: W/2-60, y: H-40, w: 120, h: 18, speed: 9 },
-    ball: { x: W/2, y: H-60, r: 12, dx: 6, dy: -6, speed: 5, stuck: true },
+    paddle: { x: W/2-60, y: H-40, w: 120, h: 18, speed: 10 },
+    ball: { x: W/2, y: H-60, r: 12, dx: 6, dy: -6, speed: 6, stuck: true },
     bonuses: [],
     maluses: [],
     particles: [],
@@ -554,16 +757,52 @@ let gameState = {
     progression: { maxLevel: 1 },
     bonusMsg: '',
     bonusMsgTimer: 0,
+    combo: 0, // new combo counter
     shopItems: [
         { name: 'Vie +1', price: 5, action: () => { gameState.lives += 1; showBonusMsg('Vie +1 !'); } },
         { name: 'Largeur Raquette +', price: 7, action: () => { gameState.paddle.w += 30; showBonusMsg('Raquette ++ !'); } },
-        { name: 'Balle Lente', price: 6, action: () => { gameState.ball.speed -= 0.4; showBonusMsg('Balle ralentie !'); } },
+        { name: 'Balle Lente', price: 6, action: () => { setBallSpeed(gameState.ball.speed - 0.4); showBonusMsg('Balle ralentie !'); } },
         { name: 'Balle Feu (1 niveau)', price: 10, action: () => { gameState.ball.fire = (gameState.ball.fire||0)+1; showBonusMsg('Balle de feu !'); } },
         { name: 'Score x2 (1 niveau)', price: 12, action: () => { gameState.doubleScore = (gameState.doubleScore||0)+1; showBonusMsg('Score x2 !'); } },
         { name: 'Malus: Raquette -', price: 4, action: () => { gameState.paddle.w -= 20; showBonusMsg('Raquette -- !'); } },
-        { name: 'Malus: Balle Rapide', price: 4, action: () => { gameState.ball.speed += 1; showBonusMsg('Balle accélérée !'); } },
-    ]
+        { name: 'Malus: Balle Rapide', price: 4, action: () => { setBallSpeed(gameState.ball.speed + 1); showBonusMsg('Balle accélérée !'); } },
+    ],
+    skins: [
+        { id: 'classic', name: 'Classique', price: 0, colors: ['#ffffff','#FFD700','#FFA500'] },
+        { id: 'neon', name: 'Neon', price: 8, colors: ['#00f5d4','#00b4d8','#6941c6'] },
+        { id: 'fire', name: 'Fire', price: 12, colors: ['#ffeb3b','#ff9800','#d32f2f'] }
+    ],
+    ownedSkins: loadOwnedSkins(),
+    selectedSkin: loadSelectedSkin()
 };
+
+// Ball speed limits and helper
+const MIN_BALL_SPEED = 3.5;
+const MAX_BALL_SPEED = 20;
+function setBallSpeed(v){ gameState.ball.speed = clamp(v, MIN_BALL_SPEED, MAX_BALL_SPEED); }
+
+// Responsive canvas resizing (maintain aspect ratio)
+function resizeCanvas(){
+    const dpr = window.devicePixelRatio || 1;
+    const maxW = Math.min(900, window.innerWidth - 40);
+    const maxH = Math.min(700, window.innerHeight - 160);
+    const aspect = 900/700;
+    let desiredW = maxW;
+    let desiredH = Math.round(desiredW / aspect);
+    if(desiredH > maxH){ desiredH = maxH; desiredW = Math.round(desiredH * aspect); }
+    CANVAS.style.width = desiredW + 'px';
+    CANVAS.style.height = desiredH + 'px';
+    CANVAS.width = Math.floor(desiredW * dpr);
+    CANVAS.height = Math.floor(desiredH * dpr);
+    CTX.setTransform(dpr,0,0,dpr,0,0);
+    W = CANVAS.width / dpr; H = CANVAS.height / dpr;
+    gameState.paddle.y = H - 40;
+    // keep ball attached to paddle on resize
+    if(gameState.ball) resetBall();
+}
+
+window.addEventListener('resize', () => { resizeCanvas(); drawGame(true); });
+resizeCanvas();
 
 // --- Fonctions utilitaires ---
 function rand(a,b) { return Math.random()*(b-a)+a; }
@@ -706,17 +945,28 @@ function generateLevel(level) {
         rows = 2 + Math.floor(level/2) + Math.floor(rand(0,2));
         cols = 7 + Math.floor(level/2) + Math.floor(rand(0,2));
         brickW = (W-80)/cols; brickH = 32;
+        let malusCount = 0;
         for(let r=0;r<rows;r++){
             for(let c=0;c<cols;c++){
                 if(Math.random()<0.10+level*0.01) continue;
                 let color = `hsl(${rand(0,360)},90%,60%)`;
-                let hits = 1+Math.floor(rand(0,Math.min(1,level/5)));
-                let bonus = Math.random()<0.10+level*0.01;
-                let malus = !bonus && Math.random()<0.05+level*0.01*(level-2);
+                let hits = 1+Math.floor(rand(0,Math.min(2,level/3)));
+                let bonus = Math.random()<0.05+level*0.005;
+                let malus = !bonus && Math.random()<0.05+level*0.01;
+                if(malus) malusCount++;
                 bricks.push({
                     x: 40+c*brickW, y: 60+r*brickH, w: brickW-8, h: brickH-8,
                     color, hits, bonus, malus, alive:true
                 });
+            }
+        }
+        // if too many maluses, add some 2-hit and 3-hit blocks
+        if(malusCount > 5){
+            for(let i=0; i<Math.min(4, Math.floor(malusCount/2)); i++){
+                let idx = Math.floor(rand(0, bricks.length));
+                bricks[idx].hits = 2 + Math.floor(rand(0,2)); // 2 or 3
+                bricks[idx].color = bricks[idx].hits === 2 ? '#ffeb3b' : '#ff6b6b'; // gold for 2, red for 3
+                bricks[idx].malus = false; // ensure not a malus
             }
         }
     }
@@ -833,7 +1083,7 @@ function drawGame(bgOnly=false) {
         CTX.shadowBlur=20;
     }
 
-    // Dégradé radial pour effet 3D
+    // Dégradé radial pour effet 3D (utilise le skin sélectionné)
     let ballGrad = CTX.createRadialGradient(
         gameState.ball.x - gameState.ball.r * 0.3,
         gameState.ball.y - gameState.ball.r * 0.3,
@@ -843,17 +1093,14 @@ function drawGame(bgOnly=false) {
         gameState.ball.r
     );
 
+    let skin = gameState.skins.find(s => s.id === gameState.selectedSkin) || gameState.skins[0];
+    let colors = skin && skin.colors ? skin.colors.slice() : ['#ffffff','#FFD700','#FFA500'];
     if(gameState.ball.fire) {
-        ballGrad.addColorStop(0, '#ffeb3b');
-        ballGrad.addColorStop(0.3, '#ff9800');
-        ballGrad.addColorStop(0.7, '#ff5722');
-        ballGrad.addColorStop(1, '#d32f2f');
-    } else {
-        ballGrad.addColorStop(0, '#ffffff');
-        ballGrad.addColorStop(0.4, '#fffacd');
-        ballGrad.addColorStop(0.7, '#FFD700');
-        ballGrad.addColorStop(1, '#FFA500');
+        colors = ['#ffeb3b','#ff9800','#d32f2f'];
     }
+    ballGrad.addColorStop(0, colors[0]);
+    ballGrad.addColorStop(0.5, colors[1] || colors[0]);
+    ballGrad.addColorStop(1, colors[2] || colors[1] || colors[0]);
 
     CTX.beginPath();
     CTX.arc(gameState.ball.x, gameState.ball.y, gameState.ball.r, 0, 2 * Math.PI);
@@ -994,6 +1241,7 @@ function gameLoop(){
         let speed = b.speed;
         b.dx = speed * Math.sin(angle);
         b.dy = -speed * Math.cos(angle);
+        b.speed += 0.05; // accelerate ball on paddle bounce
         if(gameState.ball.fire) b.dy *= 1.1;
 
         // Créer des étincelles au point d'impact
@@ -1039,14 +1287,16 @@ function gameLoop(){
             brick.hits--;
             if(brick.hits<=0){
                 brick.alive=false;
-                gameState.score+=100*(gameState.doubleScore?2:1);
+                gameState.score+=150*(gameState.doubleScore?2:1) * (1 + Math.floor(gameState.combo / 5)); // combo bonus
+                gameState.combo++; // increase combo
                 // Créer une explosion avec la couleur de la brique (nombre réduit pour perf)
                 createExplosion(brick.x+brick.w/2, brick.y+brick.h/2, brick.color, 15);
                 // Screen shake pour l'explosion
                 addScreenShake(3);
             }
             else {
-                gameState.score+=30*(gameState.doubleScore?2:1);
+                gameState.score+=50*(gameState.doubleScore?2:1) * (1 + Math.floor(gameState.combo / 5));
+                gameState.combo++; // still increase for partial hits
                 // Petit shake pour un hit qui ne détruit pas
                 addScreenShake(1);
             }
@@ -1062,7 +1312,7 @@ function gameLoop(){
             let r=rand(0,1);
             if(r<0.33) { gameState.lives += 1; showBonusMsg('Vie +1 !'); }
             else if(r<0.66) { gameState.paddle.w += 30; showBonusMsg('Raquette ++ !'); }
-            else { gameState.ball.speed -= 1; showBonusMsg('Balle ralentie !'); }
+            else { setBallSpeed(gameState.ball.speed - 1); showBonusMsg('Balle ralentie !'); }
         }
     }
     for(let i=gameState.maluses.length-1;i>=0;i--){
@@ -1071,13 +1321,14 @@ function gameLoop(){
         if(o.y>p.y&&o.x>p.x&&o.x<p.x+p.w){
             gameState.maluses.splice(i,1);
             let r=rand(0,1);
-            if(r<0.5) { gameState.paddle.w -= 20; showBonusMsg('Raquette -- !'); }
-            else { gameState.ball.speed += 1; showBonusMsg('Balle accélérée !'); }
+            if(r<0.5) { gameState.paddle.w -= 20; gameState.paddle.w = Math.max(60, gameState.paddle.w); showBonusMsg('Raquette -- !'); }
+            else { setBallSpeed(gameState.ball.speed + 1); showBonusMsg('Balle accélérée !'); }
         }
     }
 
     if(b.y-b.r>H){
         gameState.lives--;
+        gameState.combo = 0; // reset combo on miss
         // Créer une explosion quand la balle tombe
         createExplosion(b.x, H, gameState.ball.fire ? '#ff6600' : '#FFD700', 25);
         // Gros screen shake pour la perte de balle
@@ -1107,15 +1358,26 @@ function resetBall(){
 function nextLevel(){
     gameState.bricks=generateLevel(gameState.level);
     resetBall();
-    gameState.ball.speed += 0.5;
+    setBallSpeed(gameState.ball.speed + 0.5);
     gameState.ball.fire=gameState.ball.fire?gameState.ball.fire-1:0;
     gameState.doubleScore=gameState.doubleScore?gameState.doubleScore-1:0;
-    let coinsGained = 3 + Math.floor(gameState.level/2);
+    let coinsGained = 5 + Math.floor(gameState.level/2);
     gameState.coins += coinsGained;
+    // persist unlocked level and coins to profile
+    gameState.progression.maxLevel = Math.max(gameState.progression.maxLevel, gameState.level);
+    persistProfileFromGame();
     showBonusMsg('Niveau +1 ! +' + coinsGained + ' pièces');
 }
 
 function endGame(){
+    // Save score to top list using account name
+    try{
+        let curId = loadCurrentAccountId();
+        let acc = curId ? getAccountById(curId) : null;
+        let name = acc && acc.name ? acc.name : 'Anonyme';
+        pushScore({ name: name, score: gameState.score, date: Date.now() });
+    }catch(e){}
+    try{ persistProfileFromGame(); }catch(e){}
     gameState.menu=true;
     gameState.paused=false;
     document.getElementById('mainMenu').style.display='flex';
@@ -1132,9 +1394,15 @@ function showBonusMsg(msg){
 }
 
 function updateHUD(){
-    document.getElementById('score').textContent='Score: '+gameState.score+' | 🪙 '+gameState.coins;
+    // show score next to pseudo in HUD
+    let acc = getAccountById(loadCurrentAccountId());
+    let name = acc && acc.name ? acc.name : 'Anonyme';
+    document.getElementById('accountName').textContent = (gameState.combo > 0 ? 'Combo: '+gameState.combo : '');
+    document.getElementById('score').textContent='Score: '+gameState.score;
     document.getElementById('lives').textContent='Vies: '+('❤️'.repeat(gameState.lives));
     document.getElementById('level').textContent='Niveau: '+gameState.level;
+    // update main menu display too
+    let menuDisp = document.getElementById('menuAccountDisplay'); if(menuDisp) menuDisp.textContent = 'Compte: '+name+' | Score: '+gameState.score + ' | 🪙 '+gameState.coins;
 }
 
 // --- Contrôles clavier/souris ---
@@ -1158,17 +1426,97 @@ CANVAS.addEventListener('click',()=>{
     if(gameState.ball.stuck) gameState.ball.stuck=false;
 });
 
+// Touch controls (mobile)
+CANVAS.addEventListener('touchstart', (e) => {
+    if(gameState.menu) return;
+    let t = e.touches[0];
+    let rect = CANVAS.getBoundingClientRect();
+    let mx = t.clientX - rect.left;
+    gameState.paddle.x = clamp(mx - gameState.paddle.w/2, 0, W - gameState.paddle.w);
+    if(gameState.ball.stuck) gameState.ball.stuck = false;
+    e.preventDefault();
+}, { passive: false });
+
+CANVAS.addEventListener('touchmove', (e) => {
+    if(gameState.menu) return;
+    let t = e.touches[0];
+    let rect = CANVAS.getBoundingClientRect();
+    let mx = t.clientX - rect.left;
+    gameState.paddle.x = clamp(mx - gameState.paddle.w/2, 0, W - gameState.paddle.w);
+    e.preventDefault();
+}, { passive: false });
+
 // --- Menu et navigation ---
-window.addEventListener('DOMContentLoaded', ()=>{
+    window.addEventListener('DOMContentLoaded', async ()=>{
+    // Accounts init: render list and load/apply profile (if any)
+    renderAccountList();
+    initGuestProfile();
+    // wire account UI
+    let createBtn = document.getElementById('createAccountBtn');
+    if(createBtn){
+        createBtn.addEventListener('click', async ()=>{
+            let nameEl = document.getElementById('newAccountName');
+            let passEl = document.getElementById('newAccountPass');
+            let name = nameEl ? (nameEl.value || '').trim() : '';
+            let pass = passEl ? passEl.value : '';
+            if(!name){ alert('Entrez un pseudo.'); return; }
+            if(name.length > MAX_NAME_LEN){ alert('Le pseudo est trop long (max '+MAX_NAME_LEN+' caractères).'); return; }
+            // check duplicates (case-insensitive)
+            let accs = loadAccounts();
+            let exists = accs.some(a => a.name && a.name.toLowerCase() === name.toLowerCase());
+            if(exists){ alert('Ce pseudo est déjà utilisé. Choisissez-en un autre.'); return; }
+            await createAccount(name, pass);
+            if(nameEl) nameEl.value=''; if(passEl) passEl.value='';
+            renderAccountList();
+        });
+    }
+    // login button
+    let loginBtn = document.getElementById('loginBtn');
+    if(loginBtn){
+        loginBtn.addEventListener('click', async ()=>{
+            let nameEl = document.getElementById('loginName');
+            let passEl = document.getElementById('loginPass');
+            let name = nameEl ? nameEl.value : '';
+            let pass = passEl ? passEl.value : '';
+            await loginAccount(name, pass);
+            if(nameEl) nameEl.value=''; if(passEl) passEl.value='';
+        });
+    }
+    let accBtn = document.getElementById('accountBtn'); if(accBtn){ accBtn.addEventListener('click', ()=>{ document.getElementById('mainMenu').style.display='none'; document.getElementById('accountScreen').style.display='flex'; renderAccountList(); }); }
+    let backAcc = document.getElementById('backAccountBtn'); if(backAcc){ backAcc.addEventListener('click', ()=>{ document.getElementById('accountScreen').style.display='none'; document.getElementById('mainMenu').style.display='flex'; }); }
+    // reset accounts button
+    let resetBtn = document.getElementById('resetAccountsBtn'); if(resetBtn){ resetBtn.addEventListener('click', ()=>{
+        if(!confirm('Supprimer tous les comptes et toutes les données locales ?')) return;
+        try{
+            localStorage.removeItem('bb_accounts');
+            localStorage.removeItem('bb_scores');
+            localStorage.removeItem('bb_ownedSkins');
+            localStorage.removeItem('bb_selectedSkin');
+            localStorage.removeItem('bb_currentAccountId');
+        }catch(e){}
+        initGuestProfile(); renderAccountList(); alert('Données supprimées.');
+    }); }
+    // logout button
+    let logoutBtn = document.getElementById('logoutBtn'); if(logoutBtn){ logoutBtn.addEventListener('click', ()=>{ saveCurrentAccountId(null); initGuestProfile(); renderAccountList(); alert('Déconnecté.'); }); }
     document.getElementById('playBtn').addEventListener('click',()=>{
+        let curId = loadCurrentAccountId();
+        if(!curId || !getAccountById(curId)){
+            alert('Sélectionnez un compte d\'abord.');
+            document.getElementById('mainMenu').style.display='none';
+            document.getElementById('accountScreen').style.display='flex';
+            renderAccountList();
+            return;
+        }
         gameState.menu=false;
         gameState.paused=false;
         document.getElementById('mainMenu').style.display='none';
         document.getElementById('hud').style.display='flex';
         showInGameMenuBtn();
         showPauseBtn();
-        gameState.level=1; gameState.lives=3; gameState.score=0;
-        gameState.bricks=generateLevel(1);
+        // start at player's unlocked level if any
+        gameState.level = Math.max(1, gameState.progression.maxLevel || 1);
+        gameState.lives=3; gameState.score=0;
+        gameState.bricks=generateLevel(gameState.level);
         resetBall();
         gameLoop();
     });
@@ -1177,6 +1525,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         document.getElementById('shopScreen').style.display='flex';
         renderShop();
     });
+    // account button wired earlier in DOMContentLoaded extra init
     document.getElementById('progressionBtn').addEventListener('click',()=>{
         document.getElementById('mainMenu').style.display='none';
         document.getElementById('progressionScreen').style.display='flex';
@@ -1189,6 +1538,12 @@ window.addEventListener('DOMContentLoaded', ()=>{
         document.getElementById('mainMenu').style.display='none';
         document.getElementById('creditsScreen').style.display='flex';
     });
+    document.getElementById('scoreBtn').addEventListener('click',()=>{
+        document.getElementById('mainMenu').style.display='none';
+        document.getElementById('scoreScreen').style.display='flex';
+        renderScores();
+    });
+    document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
     document.getElementById('backShopBtn').addEventListener('click',()=>{
         document.getElementById('shopScreen').style.display='none';
         document.getElementById('mainMenu').style.display='flex';
@@ -1199,6 +1554,10 @@ window.addEventListener('DOMContentLoaded', ()=>{
     });
     document.getElementById('backCreditsBtn').addEventListener('click',()=>{
         document.getElementById('creditsScreen').style.display='none';
+        document.getElementById('mainMenu').style.display='flex';
+    });
+    document.getElementById('backScoreBtn').addEventListener('click',()=>{
+        document.getElementById('scoreScreen').style.display='none';
         document.getElementById('mainMenu').style.display='flex';
     });
 
@@ -1222,88 +1581,138 @@ function renderProgressPath(){
     let pathDiv = document.getElementById('progressPath');
     pathDiv.innerHTML = '';
 
-    // Créer une structure d'arbre avec des branches
     let maxLevel = gameState.progression.maxLevel;
-    let displayLevels = Math.min(maxLevel + 3, 20); // Afficher quelques niveaux au-delà du niveau actuel
+    let percent = Math.min(100, Math.round(maxLevel / 600 * 100));
 
-    let tree = document.createElement('div');
-    tree.className = 'progress-tree';
+    // Big percentage indicator
+    let big = document.createElement('div');
+    big.style.fontSize = '48px';
+    big.style.color = '#51cf66';
+    big.style.fontWeight = 'bold';
+    big.style.marginBottom = '20px';
+    big.textContent = percent + '% progression';
+    pathDiv.appendChild(big);
 
-    // Structure de l'arbre : alternance entre 1, 2, 3, 2, 3 niveaux par ligne
-    let structure = [
-        [1], [2, 3], [4], [5, 6, 7], [8, 9], [10, 11, 12], [13, 14], [15, 16, 17], [18, 19], [20]
-    ];
+    // Chronological level list
+    let levelList = document.createElement('div');
+    levelList.style.display = 'flex';
+    levelList.style.flexDirection = 'column';
+    levelList.style.alignItems = 'center';
+    levelList.style.gap = '10px';
+    levelList.style.maxHeight = '400px';
+    levelList.style.overflowY = 'auto';
+    levelList.style.padding = '20px';
+    levelList.style.background = 'linear-gradient(180deg, rgba(30,34,60,0.8), rgba(24,28,43,0.8))';
+    levelList.style.borderRadius = '20px';
+    levelList.style.border = '2px solid #FFD70033';
+    levelList.style.boxShadow = '0 8px 32px #0008';
 
-    for(let row = 0; row < structure.length; row++){
-        let levels = structure[row].filter(l => l <= displayLevels);
-        if(levels.length === 0) break;
+    let displayLevels = Math.min(maxLevel + 20, 600);
+    for(let i = 1; i <= displayLevels; i++){
+        let levelItem = document.createElement('div');
+        levelItem.style.display = 'flex';
+        levelItem.style.alignItems = 'center';
+        levelItem.style.gap = '15px';
+        levelItem.style.padding = '10px 20px';
+        levelItem.style.borderRadius = '15px';
+        levelItem.style.width = '100%';
+        levelItem.style.maxWidth = '300px';
+        levelItem.style.transition = 'all 0.3s ease';
 
-        let levelDiv = document.createElement('div');
-        levelDiv.className = 'progress-level';
-        levelDiv.style.position = 'relative';
+        let dot = document.createElement('div');
+        dot.style.width = '40px';
+        dot.style.height = '40px';
+        dot.style.borderRadius = '50%';
+        dot.style.display = 'flex';
+        dot.style.alignItems = 'center';
+        dot.style.justifyContent = 'center';
+        dot.style.fontSize = '18px';
+        dot.style.fontWeight = 'bold';
+        dot.style.boxShadow = '0 4px 12px #0006';
 
-        // Ajouter des branches depuis la ligne précédente
-        if(row > 0){
-            let prevLevels = structure[row-1].filter(l => l <= displayLevels);
-            prevLevels.forEach((prevLevel, prevIdx) => {
-                levels.forEach((currLevel, currIdx) => {
-                    if(currLevel <= maxLevel){
-                        let branch = document.createElement('div');
-                        branch.className = 'progress-branch';
-                        let xOffset = (currIdx - prevIdx) * 110;
-                        let height = 40;
-                        let angle = Math.atan2(xOffset, height) * (180 / Math.PI);
-                        branch.style.height = Math.sqrt(xOffset*xOffset + height*height) + 'px';
-                        branch.style.transform = `rotate(${angle}deg)`;
-                        branch.style.left = `calc(50% + ${prevIdx * 110 - (prevLevels.length-1)*55}px)`;
-                        branch.style.top = '-40px';
-                        levelDiv.appendChild(branch);
-                    } else {
-                        let branch = document.createElement('div');
-                        branch.className = 'progress-branch locked';
-                        let xOffset = (currIdx - prevIdx) * 110;
-                        let height = 40;
-                        let angle = Math.atan2(xOffset, height) * (180 / Math.PI);
-                        branch.style.height = Math.sqrt(xOffset*xOffset + height*height) + 'px';
-                        branch.style.transform = `rotate(${angle}deg)`;
-                        branch.style.left = `calc(50% + ${prevIdx * 110 - (prevLevels.length-1)*55}px)`;
-                        branch.style.top = '-40px';
-                        levelDiv.appendChild(branch);
-                    }
-                });
-            });
+        let label = document.createElement('div');
+        label.style.fontSize = '20px';
+        label.style.fontWeight = 'bold';
+
+        if(i <= maxLevel){
+            dot.style.background = 'linear-gradient(135deg, #51cf66 0%, #40c057 100%)';
+            dot.style.color = '#fff';
+            dot.style.boxShadow = '0 4px 20px #51cf6688';
+            label.style.color = '#FFD700';
+            levelItem.style.background = 'rgba(81, 207, 102, 0.1)';
+            levelItem.style.border = '1px solid #51cf66';
+        } else {
+            dot.style.background = 'linear-gradient(135deg, #666 0%, #888 100%)';
+            dot.style.color = '#ccc';
+            label.style.color = '#888';
+            levelItem.style.background = 'rgba(255,255,255,0.05)';
+            levelItem.style.border = '1px solid #444';
         }
 
-        // Ajouter les dots pour chaque niveau
-        levels.forEach((level) => {
-            let dotContainer = document.createElement('div');
-            dotContainer.style.position = 'relative';
+        dot.textContent = i;
+        label.textContent = 'Niveau ' + i;
 
-            let dot = document.createElement('div');
-            dot.className = 'progress-dot';
-            if(level <= maxLevel) dot.classList.add('unlocked');
-            if(level === maxLevel) dot.classList.add('current');
-            dot.textContent = level;
-
-            let label = document.createElement('div');
-            label.className = 'level-label';
-            label.textContent = 'Niveau ' + level;
-            label.style.color = level <= maxLevel ? '#FFD70099' : '#66666699';
-
-            dotContainer.appendChild(dot);
-            dotContainer.appendChild(label);
-            levelDiv.appendChild(dotContainer);
-        });
-
-        tree.appendChild(levelDiv);
+        levelItem.appendChild(dot);
+        levelItem.appendChild(label);
+        levelList.appendChild(levelItem);
     }
 
-    pathDiv.appendChild(tree);
+    pathDiv.appendChild(levelList);
+
+    // update small progress bar too
+    let pbar = document.getElementById('progressionBar');
+    if(pbar) pbar.style.width = percent + '%';
 }
 
 function renderShop(){
+    let shopCoinDisp = document.getElementById('shopCoinDisplay');
+    if(shopCoinDisp) shopCoinDisp.textContent = '🪙 ' + gameState.coins;
     let shopDiv=document.getElementById('shopItems');
     shopDiv.innerHTML='';
+    // Section Skins
+    let skinsHeader = document.createElement('div');
+    skinsHeader.style.fontSize = '22px';
+    skinsHeader.style.color = '#FFD700';
+    skinsHeader.style.marginBottom = '12px';
+    skinsHeader.textContent = 'Skins de balle';
+    shopDiv.appendChild(skinsHeader);
+
+    gameState.skins.forEach(skin => {
+        let owned = gameState.ownedSkins.includes(skin.id) || skin.price === 0;
+        let div = document.createElement('div');
+        div.className = 'shop-item';
+        div.style.alignItems = 'center';
+
+        // preview
+        let preview = document.createElement('div');
+        preview.style.width = '48px';
+        preview.style.height = '48px';
+        preview.style.borderRadius = '50%';
+        preview.style.marginRight = '16px';
+        preview.style.border = '2px solid #fff2';
+        preview.style.boxShadow = '0 4px 12px #0006';
+        preview.style.background = `radial-gradient(circle at 30% 30%, ${skin.colors[0]}, ${skin.colors[1]||skin.colors[0]})`;
+
+        let info = document.createElement('div');
+        info.style.flex = '1';
+        info.innerHTML = `<div style="font-size:20px;color:#FFD700;font-weight:bold">${skin.name}</div><div style="font-size:14px;color:#ddd">${skin.price} 🪙</div>`;
+
+        let btn = document.createElement('button');
+        btn.className = 'shop-btn';
+        if(gameState.selectedSkin === skin.id) { btn.textContent = 'Équipé'; btn.disabled = true; }
+        else if(owned) { btn.textContent = 'Équiper'; btn.onclick = ()=>{ gameState.selectedSkin = skin.id; saveSelectedSkin(); persistProfileFromGame(); renderShop(); showBonusMsg('Skin équipé: '+skin.name); }; }
+        else { btn.textContent = 'Acheter'; btn.disabled = gameState.coins < skin.price; btn.onclick = ()=>{ if(gameState.coins >= skin.price){ gameState.coins -= skin.price; gameState.ownedSkins.push(skin.id); saveOwnedSkins(); gameState.selectedSkin = skin.id; saveSelectedSkin(); updateHUD(); persistProfileFromGame(); renderShop(); showBonusMsg('Achat skin: '+skin.name); } } }
+
+        div.appendChild(preview);
+        div.appendChild(info);
+        div.appendChild(btn);
+        shopDiv.appendChild(div);
+    });
+
+    // Separator
+    let hr = document.createElement('div'); hr.style.height='12px'; shopDiv.appendChild(hr);
+
+    // Autres items
     for(let i=0;i<gameState.shopItems.length;i++){
         let item=gameState.shopItems[i];
         let div=document.createElement('div');
@@ -1318,6 +1727,7 @@ function renderShop(){
                 gameState.coins-=item.price;
                 item.action();
                 updateHUD();
+                persistProfileFromGame();
                 renderShop();
                 showBonusMsg('Achat: '+item.name);
             }
@@ -1327,21 +1737,112 @@ function renderShop(){
     }
 }
 
+// Scores: push & render top 10
+function pushScore(entry){
+    // entry can be a number or an object {name,score,date}
+    let obj;
+    if(typeof entry === 'number') obj = { name: 'Anonyme', score: entry, date: Date.now() };
+    else obj = { name: (entry && entry.name) || 'Anonyme', score: (entry && entry.score) || 0, date: (entry && entry.date) || Date.now() };
+    let arr = loadScores();
+    arr.push(obj);
+    arr.sort((a,b)=>b.score - a.score);
+    arr = arr.slice(0,10);
+    saveScores(arr);
+    // also save to current account if any
+    try{
+        let curId = loadCurrentAccountId();
+        if(curId){ let acc = getAccountById(curId); if(acc){ acc.scores = acc.scores || []; acc.scores.push(obj); acc.scores.sort((a,b)=>b.score - a.score); acc.scores = acc.scores.slice(0,10); saveAccount(acc); } }
+    }catch(e){}
+}
+function renderScores(){
+    let arr = loadScores();
+    document.getElementById('bestScore').textContent = arr.length?arr[0].score:0;
+    let ol = document.getElementById('topScores');
+    ol.innerHTML = '';
+
+    // Create a table
+    let table = document.createElement('table');
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.style.color = '#fff';
+    table.style.fontSize = '18px';
+
+    // Header
+    let thead = document.createElement('thead');
+    let headerRow = document.createElement('tr');
+    ['Rang', 'Nom', 'Score', 'Date'].forEach(text => {
+        let th = document.createElement('th');
+        th.textContent = text;
+        th.style.padding = '12px';
+        th.style.borderBottom = '2px solid #FFD700';
+        th.style.textAlign = 'left';
+        th.style.color = '#FFD700';
+        th.style.fontWeight = 'bold';
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Body
+    let tbody = document.createElement('tbody');
+    for(let i=0;i<10;i++){
+        let tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+        tr.style.transition = 'background 0.3s';
+
+        let rank = document.createElement('td');
+        rank.textContent = (i+1) + '.';
+        rank.style.padding = '10px 12px';
+        rank.style.fontWeight = 'bold';
+        rank.style.color = '#FFD700';
+
+        let name = document.createElement('td');
+        name.style.padding = '10px 12px';
+
+        let score = document.createElement('td');
+        score.style.padding = '10px 12px';
+        score.style.fontWeight = 'bold';
+
+        let date = document.createElement('td');
+        date.style.padding = '10px 12px';
+        date.style.color = '#ccc';
+        date.style.fontSize = '14px';
+
+        if(arr[i]){
+            name.textContent = arr[i].name;
+            score.textContent = arr[i].score.toLocaleString();
+            let d = new Date(arr[i].date);
+            date.textContent = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        } else {
+            name.textContent = '-';
+            score.textContent = '-';
+            date.textContent = '-';
+        }
+
+        tr.appendChild(rank);
+        tr.appendChild(name);
+        tr.appendChild(score);
+        tr.appendChild(date);
+        tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    ol.appendChild(table);
+}
+
 function showInGameMenuBtn(){
     document.getElementById('inGameMenuBtn').style.display='block';
 }
 function hideInGameMenuBtn(){
     document.getElementById('inGameMenuBtn').style.display='none';
 }
-function showPauseBtn(){
-    let btn = document.getElementById('pauseBtn');
-    btn.style.display='flex';
-    btn.classList.remove('hidden');
-}
-function hidePauseBtn(){
-    let btn = document.getElementById('pauseBtn');
-    btn.style.display='none';
-    btn.classList.add('hidden');
+function toggleFullscreen(){
+    if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen().catch(err => {
+            alert('Erreur lors de la mise en plein écran: ' + err.message);
+        });
+    } else {
+        document.exitFullscreen();
+    }
 }
 function pauseGame(){
     if(!gameState.menu && !gameState.paused){
@@ -1369,6 +1870,8 @@ document.getElementById('backToMenuBtn').onclick=()=>{
     gameState.menu=true;
     gameState.running=false;
     gameState.paused=false;
+    // persist profile before leaving
+    try{ persistProfileFromGame(); }catch(e){}
     hideInGameMenuBtn();
     hidePauseBtn();
     document.getElementById('pauseOverlay').style.display='none';
