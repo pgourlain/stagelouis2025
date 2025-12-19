@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Jeux BabylonJS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .game-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .play-icon {
+            float: right;
+            font-size: 2rem;
+            color: #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover .play-icon {
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Jeux réalisés avec BabylonJS</h1>
+        
+        <div class="games-grid">
+            <a href="casse-brique-2d.html" class="game-card">
+                <div class="play-icon">🧱</div>
+                <h2 class="game-title">Casse-Brique 2D</h2>
+                <p class="game-description">
+                    Jeu classique de casse-briques où vous devez détruire tous les blocs avec une balle rebondissante. 
+                    Utilisez votre raquette pour maintenir la balle en jeu et marquer des points !
+                </p>
+                <span class="tech-badge">⚡ Propulsé par BabylonJS</span>
+            </a>
+
+            <a href="sudoku.html" class="game-card">
+                <div class="play-icon">🔢</div>
+                <h2 class="game-title">Sudoku</h2>
+                <p class="game-description">
+                    Résolvez des grilles de Sudoku avec une interface 3D interactive. 
+                    Testez votre logique et votre réflexion avec ce puzzle numérique classique rendu en 3D.
+                </p>
+                <span class="tech-badge">⚡ Propulsé par BabylonJS</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
