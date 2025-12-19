@@ -1,0 +1,135 @@
+# Règles du projet GTA 5 Style - Babylon.js
+
+## Contexte du projet
+Ce projet est un jeu 3D style GTA 5 créé avec Babylon.js. Il s'agit d'une simulation de ville avec:
+- Système de routes urbaines en grille
+- Bâtiments avec fenêtres et collisions
+- Voitures contrôlables et IA (dont voitures de police)
+- Personnage joueur qui peut conduire ou marcher
+- Système de tir avec balles
+- Piétons animés
+- Lampadaires et panneaux de signalisation
+- Optimisations de performance pour maintenir 60 FPS
+
+## Préférences générales
+- **Langage**: Français pour tous les commentaires et communications
+- **Style de code**: JavaScript moderne (ES6+)
+- **Framework**: Babylon.js 3D avec Cannon.js pour la physique
+- **Fichier principal**: index.html (fichier unique contenant tout le code)
+- **Noms de variables**: En anglais pour la compatibilité avec Babylon.js, commentaires en français
+
+## Conventions de code
+
+### Structure
+- Tout le code est dans un seul fichier HTML
+- Organisation: HTML → CSS → JavaScript avec Babylon.js
+- Fonctions de création d'objets définies AVANT leur utilisation
+- Utilisation de TransformNode pour grouper les meshes complexes
+
+### Nomenclature
+- Fonctions de création: `createXxx()` (ex: `createCar()`, `createBuilding()`)
+- Constantes Babylon.js: Majuscules (ex: `BABYLON.Vector3`)
+- Variables locales: camelCase (ex: `playerCar`, `bulletMaterial`)
+- Collections: Pluriel (ex: `buildings`, `pedestrians`, `bullets`)
+
+### Commentaires
+- Sections principales avec `// Titre de section`
+- Sous-sections avec commentaires explicatifs en français
+- Explication des valeurs magiques (ex: `// Vitesse de la balle`)
+
+## Système de collision
+- Utilisation de AABB (Axis-Aligned Bounding Box) simple
+- Pas de physique complexe pour les voitures (manuel)
+- Fonction `checkCollision(pos, box, obstacles)` centralisée
+- Chaque objet avec collision a un `collisionBox` avec `{x, z, width, depth, height}`
+
+## Optimisations de performance
+- Réutilisation des matériaux (ex: `poleMaterialShared`, `lampMaterialShared`)
+- Freeze des matériaux statiques avec `.freeze()`
+- Frustum culling activé
+- Ombres optimisées (512x512, qualité LOW)
+- Lumières ponctuelles limitées (1 sur 3 lampadaires)
+- `autoClear = false` et `blockMaterialDirtyMechanism = true`
+
+## Système de contrôles
+- **Z/↑**: Avancer
+- **S/↓**: Reculer
+- **Q/←**: Tourner à gauche
+- **D/→**: Tourner à droite
+- **F**: Sortir/Entrer dans la voiture
+- **Espace**: Tirer (uniquement à pied)
+- **H**: Afficher les hitboxes (à implémenter si demandé)
+
+## État du joueur
+- Variable `playerState` avec propriété `inCar` (boolean)
+- Deux modes: en voiture (`playerCar`) ou à pied (`player`)
+- Système de caméra adaptatif selon le mode
+- Arme visible uniquement à pied
+
+## Système de tir
+- Tableau `bullets[]` pour stocker les balles actives
+- Cooldown de 300ms entre chaque tir
+- Balles jaunes émissives (sphères de diamètre 0.1)
+- Vitesse: `direction.scale(2)`
+- Durée de vie: 100 frames
+- Collision avec bâtiments détruit la balle
+- Dispose automatique après expiration
+
+## Animations
+- Boucle principale dans `scene.registerBeforeRender()`
+- Variable `time` incrémentée de 0.01 par frame
+- Animations sinusoidales pour mouvements fluides
+- Piétons: balancement bras/jambes, tête, torse
+- Voitures: rotation roues, léger rebond
+- Joueur: animation de marche quand il bouge
+
+## Gestion des erreurs courantes
+- Toujours définir les fonctions AVANT de les appeler
+- Vérifier que les objets existent avant d'accéder à leurs propriétés
+- Utiliser `.clone()` pour les Vector3 quand nécessaire
+- Dispose des objets supprimés avec `.dispose()`
+- Parcourir les tableaux à l'envers lors de suppressions (for i---)
+
+## Instructions pour les modifications
+
+### Ajout de nouveaux objets
+1. Créer la fonction `createXxx()` en premier
+2. Ajouter le `collisionBox` si nécessaire
+3. Ajouter aux `shadowGenerator` si l'objet projette des ombres
+4. Stocker dans un tableau si plusieurs instances
+
+### Modification du système de tir
+- Toujours vérifier `canShoot` avant de créer une balle
+- Mettre à jour les balles dans la boucle d'animation
+- Utiliser `.dispose()` pour nettoyer les balles expirées
+
+### Optimisation
+- Réutiliser les matériaux existants quand possible
+- Freeze les matériaux statiques
+- Limiter le nombre de lumières dynamiques
+- Utiliser `parent` au lieu de recalculer les positions
+
+## Tests et validation
+- Vérifier que le FPS reste stable (objectif: 60 FPS)
+- Tester les collisions avec tous les types d'obstacles
+- Vérifier que les balles se détruisent correctement
+- S'assurer que la caméra suit correctement le joueur
+- Tester la transition voiture/à pied
+
+## Améliorations futures possibles
+- Son pour le tir et les voitures
+- Système de santé pour le joueur
+- IA de police qui réagit aux tirs
+- Collisions entre balles et piétons
+- Mini-map
+- Système de missions
+- Effets de particules (fumée, feu de freinage)
+- Cycle jour/nuit
+- Conditions météo
+
+## Notes importantes
+- Ne JAMAIS casser le système de collision existant
+- Toujours tester après chaque modification importante
+- Maintenir la structure du code organisée et commentée
+- Privilégier la simplicité et la performance
+- Le fichier est volontairement en un seul HTML pour faciliter le partage
